@@ -25,7 +25,7 @@
     }
 
     .logo {
-      width: 300px;
+      width: 350px;
       margin-bottom: 1rem;
       filter: drop-shadow(0 0 10px black);
     }
@@ -65,7 +65,7 @@
 
     @media (max-width: 768px) {
       .logo {
-        width: 150px;
+        width: 180px;
       }
 
       .mensaje {
@@ -98,9 +98,9 @@
   <div class="mensaje">de membranas asfálticas suministradas a lo largo de Chile</div>
   <div class="mensaje">¿Qué esperas para sumarte?</div>
 
-  <button id="audioToggle">⏸️ Pausar sonido</button>
+  <button id="audioToggle">🔊 Reproducir sonido</button>
 
-  <audio id="rainAudio" autoplay loop>
+  <audio id="rainAudio" loop>
     <source src="https://www.membratech.cl/web/wp-content/uploads/2025/05/lluvia.mp3" type="audio/mpeg">
     Tu navegador no soporta audio HTML5.
   </audio>
@@ -139,16 +139,38 @@
 
     const audio = document.getElementById('rainAudio');
     const toggleBtn = document.getElementById('audioToggle');
+    let isPlaying = false;
+
+    // Mostrar botón en móviles
+    if (window.innerWidth <= 768) {
+      toggleBtn.style.display = 'inline-block';
+    }
 
     toggleBtn.addEventListener('click', () => {
-      if (audio.paused) {
+      if (!isPlaying) {
         audio.play();
         toggleBtn.textContent = '⏸️ Pausar sonido';
+        isPlaying = true;
       } else {
         audio.pause();
-        toggleBtn.textContent = '▶️ Reanudar sonido';
+        toggleBtn.textContent = '🔊 Reproducir sonido';
+        isPlaying = false;
       }
     });
+
+    // En computador: activar audio al primer clic
+    if (window.innerWidth > 768) {
+      document.addEventListener('click', () => {
+        if (!isPlaying) {
+          audio.play().then(() => {
+            isPlaying = true;
+            toggleBtn.textContent = '⏸️ Pausar sonido';
+          }).catch(e => {
+            console.log('Autoplay bloqueado:', e);
+          });
+        }
+      }, { once: true });
+    }
   </script>
 </body>
 </html>
